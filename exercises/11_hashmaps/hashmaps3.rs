@@ -15,11 +15,10 @@
 // Execute `rustlings hint hashmaps3` or use the `hint` watch subcommand for a
 // hint.
 
-// I AM NOT DONE
-
 use std::collections::HashMap;
 
 // A structure to store the goal details of a team.
+#[derive(Debug)]
 struct Team {
     goals_scored: u8,
     goals_conceded: u8,
@@ -40,6 +39,45 @@ fn build_scores_table(results: String) -> HashMap<String, Team> {
         // will be the number of goals conceded by team_2, and similarly
         // goals scored by team_2 will be the number of goals conceded by
         // team_1.
+
+        println!("");
+        println!("team_1_name = {:#?}", team_1_name);
+        println!("team_1_score = {:#?}", team_1_score);
+        println!("team_2_name = {:#?}", team_2_name);
+        println!("team_2_score = {:#?}", team_2_score);
+        println!("");
+
+        // ─────────────────────────────────────────────────────────────
+
+        let team_1_previous_score = scores.get(&team_1_name).unwrap_or(&Team {
+            goals_conceded: 0,
+            goals_scored: 0,
+        });
+        println!("team_1_previous_score = {:#?}", team_1_previous_score);
+
+        scores.insert(
+            team_1_name,
+            Team {
+                goals_scored: team_1_score + team_1_previous_score.goals_scored,
+                goals_conceded: team_2_score + team_1_previous_score.goals_conceded,
+            },
+        );
+
+        // ─────────────────────────────────────────────────────────────
+
+        let team_2_previous_score = scores.get(&team_2_name).unwrap_or(&Team {
+            goals_conceded: 0,
+            goals_scored: 0,
+        });
+        println!("team_2_previous_score = {:#?}", team_2_previous_score);
+
+        scores.insert(
+            team_2_name,
+            Team {
+                goals_scored: team_2_score + team_2_previous_score.goals_scored,
+                goals_conceded: team_1_score + team_2_previous_score.goals_conceded,
+            },
+        );
     }
     scores
 }
@@ -72,7 +110,15 @@ mod tests {
     #[test]
     fn validate_team_score_1() {
         let scores = build_scores_table(get_results());
+        print!("");
+        println!("scores = {:#?}", scores);
+        print!("");
+
         let team = scores.get("England").unwrap();
+        print!("");
+        println!("team = {:#?}", team);
+        print!("");
+
         assert_eq!(team.goals_scored, 5);
         assert_eq!(team.goals_conceded, 4);
     }
