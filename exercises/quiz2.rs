@@ -49,11 +49,11 @@ mod my_module {
                 Command::Append(size) => {
                     println!("size: {:?}", size);
 
-                    let mut text_to_append: String = "".to_string();
-                    for i in 0..size {
+                    let mut text_to_append = string.to_string();
+                    for _ in 0..*size {
                         text_to_append += "bar"
                     }
-                    output.push(string.to_string())
+                    output.push(text_to_append.to_string())
                 }
             };
         }
